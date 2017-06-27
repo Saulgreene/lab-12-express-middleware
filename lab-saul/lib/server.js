@@ -10,10 +10,10 @@ let server;
 const app = express();
 
 //DONT NEED THIS????
-app.get('/api/'hello.erkegdigfkepik)
+// app.get('/api/'hello.erkegdigfkepik)
 
 
-app.use(require('..route/routes-info-store.js'));
+app.use(require('../route/routes-info-store.js'));
 app.use((err, req, res, next) => {
   console.log('err', err);
   if(!err){
