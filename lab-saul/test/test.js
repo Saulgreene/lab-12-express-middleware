@@ -44,17 +44,81 @@ describe('testing student information routes', () => {
         tempStudent = res.body;
       });
     });
-    it('should return tempStudentThree with only the required inputs', () => {
+    it('should return a 400 err', () => {
       return superagent.post(`${API_URL}/api/student`)
-      .send(tempStudentThree)
+      .send({})
+      .catch(err =>{
+        expect(err.status).toEqual(400);
+      });
+    });
+    it('should return a 409 err', () => {
+      return superagent.post(`${API_URL}/api/student`)
+      .send(tempStudentOne)
+      .catch(err =>{
+        expect(err.status).toEqual(409);
+      });
+    });
+    // it('should return tempStudentThree with only the required inputs', () => {
+    //   return superagent.post(`${API_URL}/api/student`)
+    //   .send(tempStudentThree)
+    //   .then(res =>{
+    //     expect(res.status).toEqual(200);
+    //     expect(res.body.name).toEqual('joe');
+    //     expect(res.body.class).toEqual(301);
+    //     expect(res.body.grade).toEqual(78);
+    //     expect(res.body.gender).toNotExist();
+    //     expect(res.body.race).toNotExist();
+    //     tempStudent = res.body;
+    //   });
+    // });
+  });
+  describe('test GET /api/student', () => {
+    it('should return a student with characteristics', () =>{
+      return superagent.get(`${API_URL}/api/student/${tempStudent._id}`)
+      .then(res => {
+        expect(res.status).toEqual(200);
+        expect(res.body._id).toEqual(tempStudent._id);
+        expect(res.body.name).toEqual('arianna');
+        expect(res.body.class).toEqual(101);
+        expect(res.body.grade).toEqual(84);
+        expect(res.body.gender).toEqual('female');
+        expect(res.body.race).toEqual('latina');
+        expect(res.body.created).toEqual(tempStudent.created);
+      });
+    });
+    it('should return a 404', () =>{
+      return superagent.get(`${API_URL}/api/student/${tempStudent._id}`)
+      .catch(err => {
+        expect(err.status).toEqual(404);
+      });
+    });
+  });
+  describe('test PUT /api/student', () =>{
+    it('should return a student', () => {
+      return superagent.put(`${API_URL}/api/student/${tempStudent._id}`)
+      .send({tempStudent})
       .then(res =>{
         expect(res.status).toEqual(200);
-        expect(res.body.name).toEqual('joe');
-        expect(res.body.class).toEqual(301);
-        expect(res.body.grade).toEqual(78);
-        expect(res.body.gender).toNotExist();
-        expect(res.body.race).toNotExist();
+        expect(res.body.name).toEqual('arianna');
+        expect(res.body.class).toEqual(101);
+        expect(res.body.grade).toEqual(84);
+        expect(res.body.gender).toEqual('female');
+        expect(res.body.race).toEqual('latina');
         tempStudent = res.body;
+      });
+    });
+  });
+  describe('test DELETE /api/student', () =>{
+    it('should respond 404', () => {
+      return superagent.delete(`${API_URL}/api/student/8776`)
+      .catch(err => {
+        expect(err.status).toEqual(404);
+      });
+    });
+    it('should delete a student', () => {
+      return superagent.delete(`${API_URL}/api/student/${tempStudent._id}`)
+      .then(res =>{
+        expect(res.status).toEqual(204);
       });
     });
   });

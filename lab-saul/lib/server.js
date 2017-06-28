@@ -40,6 +40,6 @@ serverControl.stop = () => {
       console.log('server shut down');
       server.isOn = false;
       resolve();
-    })
-  })
-}
+    });
+  });
+};
