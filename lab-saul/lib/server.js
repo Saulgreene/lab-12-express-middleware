@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -9,18 +10,16 @@ mongoose.connect(process.env.MONGODB_URI);
 let server;
 const app = express();
 
-//DONT NEED THIS????
-// app.get('/api/'hello.erkegdigfkepik)
-
-
 app.use(require('../route/routes-info-store.js'));
-app.use((err, req, res, next) => {
-  console.log('err', err);
-  if(!err){
-    res.sendStatus(500);
-  }
-  res.sendStatus(err.status);
-});
+app.use(require('./error-middleware.js'));
+// app.use((err, req, res, next) => {
+//   console.log('err', err);
+//   if(!err){
+//     res.sendStatus(500);
+//   }
+//   res.sendStatus(err.status);
+//   next();
+// });
 
 //EXPORTING SERVER
 const serverControl = module.exports = {};
@@ -34,6 +33,7 @@ serverControl.start = () => {
     });
   });
 };
+
 serverControl.stop = () => {
   return new Promise((resolve) => {
     server.close(() => {
